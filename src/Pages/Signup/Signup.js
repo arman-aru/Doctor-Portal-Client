@@ -8,8 +8,9 @@ const Signup = () => {
     formState: { errors },
     handleSubmit,
   } = useForm();
+  
 
-  const handleLogin = (data) => {
+  const handleSignUp = (data) => {
     console.log(data);
   };
   return (
@@ -17,7 +18,7 @@ const Signup = () => {
       {/* React form */}
       <form
         className="text-center shadow-2xl px-24 py-10 rounded-2xl"
-        onSubmit={handleSubmit(handleLogin)}
+        onSubmit={handleSubmit(handleSignUp)}
       >
         <div>
           <h2 className="text-4xl font-bold  text-primary mb-6">
@@ -79,6 +80,7 @@ const Signup = () => {
             {...register("password", {
               required: "Password dite hobe",
               minLength: { value: 6, message: "Password 6 ta hoite hobe" },
+              pattern: {value: /(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])/, message: "Password must be super strong"}
             })}
             type="password"
             placeholder="Enter your password"
