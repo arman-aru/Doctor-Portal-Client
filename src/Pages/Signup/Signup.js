@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthProvider";
 
@@ -10,16 +11,42 @@ const Signup = () => {
     handleSubmit,
   } = useForm();
   
-  const { createUser } = useContext(AuthContext);
+  const { createUser, updateUser } = useContext(AuthContext);
+
+  const [signUpError, setSignUpError] = useState('')
 
   const handleSignUp = (data) => {
     console.log(data);
+    setSignUpError('');
     createUser(data.email, data.password)
     .then(result =>{
       const user = result.user;
       console.log(user);
+      // toast.success("User created Succesfully");
+      toast((t) => (
+        <span className="text-primary">
+            User created <b>Succesfully </b>
+          <button
+            className="bg-red-600 btn btn-sm btn-circle"
+            onClick={() => toast.dismiss(t.id)}
+          >
+            {" "}
+            ✕
+          </button>
+        </span>
+      ));
+      // Toast close
+      const userInfo = {
+        displayName: data.name
+      }
+      updateUser(userInfo)
+      .then(() =>{})
+      .catch(err => console.log(err));
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      console.log(error)
+      setSignUpError(error.message)
+    });
   };
   return (
     <div className="h-[500px] flex justify-center items-center my-48">
@@ -94,6 +121,8 @@ const Signup = () => {
             placeholder="Enter your password"
             className="input input-bordered w-full"
           />
+          {/* Sign up error message */}
+          {signUpError && <p className="text-red-600">{signUpError}</p>}
         </div>
 
         <input className="btn btn-wide btn-secondary mt-6" type="submit" />
